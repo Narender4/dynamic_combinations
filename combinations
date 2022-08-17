@@ -1,0 +1,45 @@
+import json
+file=input("enter the input file ")
+x=open(file)
+y=x.read()
+#print(y)
+x.close()
+d=json.loads(y)
+#print(d)
+print("name of product is  ","\"",d["name"],"\"")
+l=d["attributes"]
+#print(l)
+attribute_names = []
+for item in l:
+    att_name = item['name']
+    values = item["values"]
+    if values:
+        temp_list = []
+        for value in values:
+            if value['active']:
+                temp_list.append(value['name'])
+        attribute_names.append([att_name, temp_list])
+#print(attribute_names)
+new = []
+for i in range(len(attribute_names)):
+    new.append(attribute_names[i][1])
+#print(new)
+def product(ar_list):
+    if not ar_list:
+        yield ()
+    else:
+        for a in ar_list[0]:
+            for prod in product(ar_list[1:]):
+                yield (a,)+prod
+new=list(product([*new]))                
+#print (new)
+print("Total possible combinations:",len(new))
+names = []
+for name, _ in attribute_names:
+    names.append(name)
+for combination in new:
+    for i, name in enumerate(names):
+        print(f"{name}: {combination[i]} {'|' if i != len(names)-1 else ''} ", end='')
+    print()
+
+
